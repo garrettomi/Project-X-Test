@@ -12,6 +12,8 @@ import { LOCALSTORAGE_KEYS } from '@/lib/constants/localStorage';
 interface CompanyCardProps {
   company: Company;
   matchingPoints: string[];
+  valueMatchingRatings: any;
+  strengthMatchingRatings: any;
   onFeedback: (feedback: 'interested' | 'not_interested') => void;
   feedback?: 'interested' | 'not_interested';
   lng: string;
@@ -20,6 +22,8 @@ interface CompanyCardProps {
 export default function CompanyCard({
   company,
   matchingPoints,
+  valueMatchingRatings,
+  strengthMatchingRatings,
   onFeedback,
   feedback,
   lng,
@@ -289,6 +293,36 @@ export default function CompanyCard({
                     <li>{t('recommendations.noMatchingPoints')}</li>
                   )}
                 </ul>
+                <div className="mt-4">
+                  {Object.entries(valueMatchingRatings)
+                    .filter(([_, score]: any) => score >= 9)
+                    .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
+                    .map(([value, score]: any) => (
+                      <div key={value} className="mb-2 flex flex-row">
+                        <div className="mr-2">
+                          <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                        </div>
+                        <div>
+                          <p className="text-xs text-white/80 font-bold">{score}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <div>
+                  {Object.entries(strengthMatchingRatings)
+                    .filter(([_, score]: any) => score >= 8)
+                    .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
+                    .map(([value, score]: any) => (
+                      <div key={value} className="mb-2 flex flex-row">
+                        <div className="mr-2">
+                          <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                        </div>
+                        <div>
+                          <p className="text-xs text-white/80 font-bold">{score}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>

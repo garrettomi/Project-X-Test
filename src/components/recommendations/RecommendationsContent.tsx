@@ -501,6 +501,8 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
                   key={recommendation.id || recommendation.company.id}
                   company={recommendation.company}
                   matchingPoints={recommendation.matching_points}
+                  valueMatchingRatings={recommendation.value_match_ratings}
+                  strengthMatchingRatings={recommendation.strength_match_ratings}
                   feedback={recommendation.feedback}
                   onFeedback={(feedbackType) =>
                     recommendation.id &&
