@@ -171,6 +171,20 @@ export default function CompanyCard({
     );
   };
 
+  // Used to match styles/update UI based on score info for values & strengths
+  const getMatchInfo = (score: number) => {
+    switch (score) {
+      case 10:
+        return { label: 'Strong match', className: 'text-green-400' };
+      case 9:
+        return { label: 'Great match', className: 'text-emerald-300' };
+      case 8:
+        return { label: 'Good match', className: 'text-yellow-300' };
+      default:
+        return { label: '', className: '' };
+    }
+  };
+
   return (
     <div className="relative">
       {/* Reveal animation overlay */}
@@ -295,33 +309,41 @@ export default function CompanyCard({
                 </ul>
                 <div className="mt-4">
                   {Object.entries(valueMatchingRatings)
-                    .filter(([_, score]: any) => score >= 9)
+                    .filter(([_, score]: any) => score >= 8)
                     .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
-                    .map(([value, score]: any) => (
-                      <div key={value} className="mb-2 flex flex-row">
-                        <div className="mr-2">
-                          <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                    .map(([value, score]: any) => {
+                      const { label, className } = getMatchInfo(score);
+                      return (
+                        <div key={value} className="mb-2 flex flex-row">
+                          <div className="mr-2">
+                            <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                          </div>
+                          <div>
+                            <p className={`text-xs font-bold ${className}`}>{label}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs text-white/80 font-bold">{score}</p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
                 <div>
                   {Object.entries(strengthMatchingRatings)
                     .filter(([_, score]: any) => score >= 8)
                     .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
-                    .map(([value, score]: any) => (
-                      <div key={value} className="mb-2 flex flex-row">
-                        <div className="mr-2">
-                          <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                    .map(([strength, score]: any) => {
+                      const { label, className } = getMatchInfo(score);
+                      return (
+                        <div key={strength} className="mb-2 flex flex-row">
+                          <div className="mr-2">
+                            <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">
+                              {strength}
+                            </h3>
+                          </div>
+                          <div>
+                            <p className={`text-xs font-bold ${className}`}>{label}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs text-white/80 font-bold">{score}</p>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
               </div>
             </div>
