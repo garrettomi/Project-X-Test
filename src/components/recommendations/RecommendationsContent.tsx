@@ -458,7 +458,7 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         <AnimatedContent direction="vertical" distance={30} delay={450}>
           <ul className="text-start text-gray-300 mb-2">
             <div className="my-2">
-              <span>Your ideal workplace values...</span>
+              <span>{t('recommendations.userValues')}</span>
             </div>
             {values &&
               values.map((value: string, index: number) => (
@@ -469,7 +469,7 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
           </ul>
           <ul className="mb-4 text-start text-gray-300 sm:mb-8">
             <div className="my-2">
-              <span>You excel in the...</span>
+              <span>{t('recommendations.userStrengths')}</span>
             </div>
             {strengths &&
               strengths.map((strength: string, index: number) => (

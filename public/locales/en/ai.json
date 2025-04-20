@@ -167,6 +167,8 @@
   },
   "recommendations": {
     "title": "Your Company Matches",
+    "userValues": "Your ideal workplace values...",
+    "userStrengths": "You excel in the...",
     "description": "Based on your values and interests, we've found these companies that might be a good fit for you.",
     "viewDetails": "View Details",
     "noMatches": "No matches found. Please try adjusting your preferences.",
