@@ -9,11 +9,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import Link from 'next/link';
 import { LOCALSTORAGE_KEYS } from '@/lib/constants/localStorage';
 
+type ValueMatchRatings = Record<string, number> | undefined;
+type StrengthMatchRatings = Record<string, number> | undefined;
+
 interface CompanyCardProps {
   company: Company;
   matchingPoints: string[];
-  valueMatchingRatings: any;
-  strengthMatchingRatings: any;
+  valueMatchingRatings: ValueMatchRatings;
+  strengthMatchingRatings: StrengthMatchRatings;
   onFeedback: (feedback: 'interested' | 'not_interested') => void;
   feedback?: 'interested' | 'not_interested';
   lng: string;
@@ -175,11 +178,11 @@ export default function CompanyCard({
   const getMatchInfo = (score: number) => {
     switch (score) {
       case 10:
-        return { label: 'Strong match', className: 'text-green-400' };
+        return { label: t('recommendations.strongMatch'), className: 'text-green-400' };
       case 9:
-        return { label: 'Great match', className: 'text-emerald-300' };
+        return { label: t('recommendations.greatMatch'), className: 'text-emerald-300' };
       case 8:
-        return { label: 'Good match', className: 'text-yellow-300' };
+        return { label: t('recommendations.goodMatch'), className: 'text-yellow-300' };
       default:
         return { label: '', className: '' };
     }
@@ -308,10 +311,10 @@ export default function CompanyCard({
                   )}
                 </ul>
                 <div className="mt-4">
-                  {Object.entries(valueMatchingRatings)
-                    .filter(([_, score]: any) => score >= 8)
-                    .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
-                    .map(([value, score]: any) => {
+                  {Object.entries(valueMatchingRatings ?? {})
+                    .filter(([_, score]) => score >= 8)
+                    .sort(([, scoreA], [, scoreB]: any) => scoreB - scoreA)
+                    .map(([value, score]) => {
                       const { label, className } = getMatchInfo(score);
                       return (
                         <div key={value} className="mb-2 flex flex-row">
@@ -326,10 +329,10 @@ export default function CompanyCard({
                     })}
                 </div>
                 <div>
-                  {Object.entries(strengthMatchingRatings)
-                    .filter(([_, score]: any) => score >= 8)
-                    .sort(([, scoreA]: any, [, scoreB]: any) => scoreB - scoreA)
-                    .map(([strength, score]: any) => {
+                  {Object.entries(strengthMatchingRatings ?? {})
+                    .filter(([_, score]) => score >= 8)
+                    .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+                    .map(([strength, score]) => {
                       const { label, className } = getMatchInfo(score);
                       return (
                         <div key={strength} className="mb-2 flex flex-row">
