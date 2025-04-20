@@ -319,10 +319,12 @@ export default function CompanyCard({
                       return (
                         <div key={value} className="mb-2 flex flex-row">
                           <div className="mr-2">
-                            <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">{value}</h3>
+                            <p className="mb-1 text-xs text-white sm:mb-2 sm:font-medium">
+                              {value}
+                            </p>
                           </div>
                           <div>
-                            <p className={`text-xs font-bold ${className}`}>{label}</p>
+                            <p className={`text-end text-xs font-bold ${className}`}>{label}</p>
                           </div>
                         </div>
                       );
@@ -337,12 +339,12 @@ export default function CompanyCard({
                       return (
                         <div key={strength} className="mb-2 flex flex-row">
                           <div className="mr-2">
-                            <h3 className="mb-1 text-xs font-medium text-white sm:mb-2">
+                            <p className="mb-1 text-xs text-white sm:mb-2 sm:font-medium">
                               {strength}
-                            </h3>
+                            </p>
                           </div>
-                          <div>
-                            <p className={`text-xs font-bold ${className}`}>{label}</p>
+                          <div className="ml-4 lg:ml-0">
+                            <p className={`text-end text-xs font-bold ${className}`}>{label}</p>
                           </div>
                         </div>
                       );

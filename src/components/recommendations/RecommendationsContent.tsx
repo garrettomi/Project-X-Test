@@ -455,22 +455,28 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         <AnimatedContent direction="vertical" distance={30} delay={450}>
           <ul className="text-start text-gray-300 mb-2">
             <div className="my-2">
-              <span>{t('recommendations.userValues')}</span>
+              <span className="text-sm sm:text-base">{t('recommendations.userValues')}</span>
             </div>
             {values &&
               values.map((value: string, index: number) => (
-                <li key={index} className="font-bold text-sm leading-loose list-disc list-inside">
+                <li
+                  key={index}
+                  className="font-medium sm:font-bold text-xs sm:text-sm leading-relaxed sm:leading-loose list-disc list-inside"
+                >
                   {value}
                 </li>
               ))}
           </ul>
           <ul className="mb-4 text-start text-gray-300 sm:mb-8">
             <div className="my-2">
-              <span>{t('recommendations.userStrengths')}</span>
+              <span className="text-sm sm:text-base">{t('recommendations.userStrengths')}</span>
             </div>
             {strengths &&
               strengths.map((strength: string, index: number) => (
-                <li key={index} className="font-bold text-sm leading-loose list-disc list-inside">
+                <li
+                  key={index}
+                  className="font-medium sm:font-bold text-xs sm:text-sm leading-relaxed sm:leading-loose list-disc list-inside"
+                >
                   {strength}
                 </li>
               ))}
