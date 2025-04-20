@@ -46,42 +46,27 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
     // Scroll to top of page
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Track recommendations page visit
-    trackRecommendationsPageVisit().catch((error) => {
-      console.error('Error tracking recommendations page visit:', error);
-    });
+    if (!userId) {
+      setError(t('recommendations.errors.missing_user_id'));
+      setLoading(false);
+      return;
+    }
 
     const fetchUserDetails = async () => {
-      if (!userId) {
-        setError('recommendations.errors.missing_user_id');
-        setLoading(false);
-        return;
-      }
+      const response = await fetch(`/api/values?userId=${userId}`);
 
-      try {
-        const response = await fetch(`/api/values?userId=${userId}`);
+      if (!response.ok) throw new Error('Error fetching user data from values');
 
-        if (!response.ok) throw new Error('Error fetching data');
+      const data = await response.json();
 
-        const data = await response.json();
+      const extractedValues = Object.keys(data.user_values.values);
+      const extractedStrengths = Object.keys(data.user_values.strengths);
 
-        const extractedValues = Object.keys(data.user_values.values);
-        const extractedStrengths = Object.keys(data.user_values.strengths);
-
-        setValues(extractedValues);
-        setStrengths(extractedStrengths);
-      } catch (error) {
-        console.error(`Error fetching user details: ${error}`);
-      }
+      setValues(extractedValues);
+      setStrengths(extractedStrengths);
     };
 
     const fetchRecommendations = async (refresh = false) => {
-      if (!userId) {
-        setError(t('recommendations.errors.missing_user_id'));
-        setLoading(false);
-        return;
-      }
-
       // Set loading state if not refreshing
       if (!refresh) {
         setLoading(true);
@@ -206,7 +191,19 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
       }
     };
 
-    fetchUserDetails();
+    const initialPromises = [
+      // Track recommendations page visit
+      trackRecommendationsPageVisit(),
+      // Fetch strengths & values for users to reference when reviewing results
+      fetchUserDetails(),
+    ];
+
+    Promise.all(initialPromises).catch((error) => {
+      console.error(
+        'Error during initial fetch for tracking page visits and fetching user details:',
+        error
+      );
+    });
 
     if (loaded) {
       fetchRecommendations();
