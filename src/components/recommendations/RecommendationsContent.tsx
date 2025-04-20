@@ -39,6 +39,8 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
   const [hasClosedDialog, setHasClosedDialog] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
+  const [strengths, setStrengths] = useState<any>([]);
+
   useEffect(() => {
     // Scroll to top of page
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -47,6 +49,29 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
     trackRecommendationsPageVisit().catch((error) => {
       console.error('Error tracking recommendations page visit:', error);
     });
+
+    const fetchUserDetails = async () => {
+      if (!userId) {
+        setError('recommendations.errors.missing_user_id');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/values?userId=${userId}`);
+
+        if (!response.ok) throw new Error('Error fetching data');
+
+        const data = await response.json();
+
+        console.log('DATA FROM USER DETAILS GET POINT', data);
+
+        const extractedStrengths = Object.keys(data.user_values.strengths);
+        setStrengths(extractedStrengths);
+      } catch (error) {
+        console.error(`Error fetching user details: ${error}`);
+      }
+    };
 
     const fetchRecommendations = async (refresh = false) => {
       if (!userId) {
@@ -178,6 +203,9 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         setIsStreaming(false);
       }
     };
+
+    fetchUserDetails();
+    console.log('STRENGTHS', strengths);
 
     if (loaded) {
       fetchRecommendations();
@@ -427,6 +455,14 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         </AnimatedContent>
 
         <AnimatedContent direction="vertical" distance={30} delay={450}>
+          <ul className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
+            {strengths &&
+              strengths.map((strength: string, index: number) => (
+                <li key={index} className="font-bold text-sm leading-loose">
+                  {strength}
+                </li>
+              ))}
+          </ul>
           <p className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
             {t('recommendations.description')}
           </p>
