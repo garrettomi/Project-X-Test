@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 
   const { data: userData, error: userError } = await supabase
     .from('user_values')
-    .select('strengths')
+    .select('strengths, values')
     .eq('id', userId)
     .single();
 

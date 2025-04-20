@@ -40,6 +40,7 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
   const [isStreaming, setIsStreaming] = useState(false);
 
   const [strengths, setStrengths] = useState<any>([]);
+  const [values, setValues] = useState<any>([]);
 
   useEffect(() => {
     // Scroll to top of page
@@ -66,7 +67,10 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
 
         console.log('DATA FROM USER DETAILS GET POINT', data);
 
+        const extractedValues = Object.keys(data.user_values.values);
         const extractedStrengths = Object.keys(data.user_values.strengths);
+
+        setValues(extractedValues);
         setStrengths(extractedStrengths);
       } catch (error) {
         console.error(`Error fetching user details: ${error}`);
@@ -205,7 +209,6 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
     };
 
     fetchUserDetails();
-    console.log('STRENGTHS', strengths);
 
     if (loaded) {
       fetchRecommendations();
@@ -455,6 +458,14 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         </AnimatedContent>
 
         <AnimatedContent direction="vertical" distance={30} delay={450}>
+          <ul className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
+            {values &&
+              values.map((value: string, index: number) => (
+                <li key={index} className="font-bold text-sm leading-loose">
+                  {value}
+                </li>
+              ))}
+          </ul>
           <ul className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
             {strengths &&
               strengths.map((strength: string, index: number) => (
