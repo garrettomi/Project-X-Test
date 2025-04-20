@@ -39,8 +39,8 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
   const [hasClosedDialog, setHasClosedDialog] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
-  const [strengths, setStrengths] = useState<any>([]);
-  const [values, setValues] = useState<any>([]);
+  const [strengths, setStrengths] = useState<Array<string>>([]);
+  const [values, setValues] = useState<Array<string>>([]);
 
   useEffect(() => {
     // Scroll to top of page
@@ -64,8 +64,6 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         if (!response.ok) throw new Error('Error fetching data');
 
         const data = await response.json();
-
-        console.log('DATA FROM USER DETAILS GET POINT', data);
 
         const extractedValues = Object.keys(data.user_values.values);
         const extractedStrengths = Object.keys(data.user_values.strengths);
@@ -458,18 +456,24 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         </AnimatedContent>
 
         <AnimatedContent direction="vertical" distance={30} delay={450}>
-          <ul className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
+          <ul className="text-start text-gray-300 mb-2">
+            <div className="my-2">
+              <span>Your ideal workplace values...</span>
+            </div>
             {values &&
               values.map((value: string, index: number) => (
-                <li key={index} className="font-bold text-sm leading-loose">
+                <li key={index} className="font-bold text-sm leading-loose list-disc list-inside">
                   {value}
                 </li>
               ))}
           </ul>
-          <ul className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
+          <ul className="mb-4 text-start text-gray-300 sm:mb-8">
+            <div className="my-2">
+              <span>You excel in the...</span>
+            </div>
             {strengths &&
               strengths.map((strength: string, index: number) => (
-                <li key={index} className="font-bold text-sm leading-loose">
+                <li key={index} className="font-bold text-sm leading-loose list-disc list-inside">
                   {strength}
                 </li>
               ))}
