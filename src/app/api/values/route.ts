@@ -34,3 +34,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId');
+
+  if (!userId) return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+
+  const { data: userData, error: userError } = await supabase
+    .from('user_values')
+    .select('strengths, values')
+    .eq('id', userId)
+    .single();
+
+  if (userError || !userData) {
+    console.error('Error fetching user values', userError);
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ user_values: userData });
+}

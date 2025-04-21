@@ -9,9 +9,14 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import Link from 'next/link';
 import { LOCALSTORAGE_KEYS } from '@/lib/constants/localStorage';
 
+type ValueMatchRatings = Record<string, number> | undefined;
+type StrengthMatchRatings = Record<string, number> | undefined;
+
 interface CompanyCardProps {
   company: Company;
   matchingPoints: string[];
+  valueMatchingRatings: ValueMatchRatings;
+  strengthMatchingRatings: StrengthMatchRatings;
   onFeedback: (feedback: 'interested' | 'not_interested') => void;
   feedback?: 'interested' | 'not_interested';
   lng: string;
@@ -20,6 +25,8 @@ interface CompanyCardProps {
 export default function CompanyCard({
   company,
   matchingPoints,
+  valueMatchingRatings,
+  strengthMatchingRatings,
   onFeedback,
   feedback,
   lng,
@@ -167,6 +174,20 @@ export default function CompanyCard({
     );
   };
 
+  // Used to match styles/update UI based on score info for values & strengths
+  const getMatchInfo = (score: number) => {
+    switch (score) {
+      case 10:
+        return { label: t('recommendations.strongMatch'), className: 'text-green-400' };
+      case 9:
+        return { label: t('recommendations.greatMatch'), className: 'text-emerald-300' };
+      case 8:
+        return { label: t('recommendations.goodMatch'), className: 'text-yellow-300' };
+      default:
+        return { label: '', className: '' };
+    }
+  };
+
   return (
     <div className="relative">
       {/* Reveal animation overlay */}
@@ -289,6 +310,46 @@ export default function CompanyCard({
                     <li>{t('recommendations.noMatchingPoints')}</li>
                   )}
                 </ul>
+                <div className="mt-4">
+                  {Object.entries(valueMatchingRatings ?? {})
+                    .filter(([_, score]) => score >= 8)
+                    .sort(([, scoreA], [, scoreB]: any) => scoreB - scoreA)
+                    .map(([value, score]) => {
+                      const { label, className } = getMatchInfo(score);
+                      return (
+                        <div key={value} className="mb-2 flex flex-row">
+                          <div className="mr-2">
+                            <p className="mb-1 text-xs text-white sm:mb-2 sm:font-medium">
+                              {value}
+                            </p>
+                          </div>
+                          <div>
+                            <p className={`text-end text-xs font-bold ${className}`}>{label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+                <div>
+                  {Object.entries(strengthMatchingRatings ?? {})
+                    .filter(([_, score]) => score >= 8)
+                    .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+                    .map(([strength, score]) => {
+                      const { label, className } = getMatchInfo(score);
+                      return (
+                        <div key={strength} className="mb-2 flex flex-row">
+                          <div className="mr-2">
+                            <p className="mb-1 text-xs text-white sm:mb-2 sm:font-medium">
+                              {strength}
+                            </p>
+                          </div>
+                          <div className="ml-4 lg:ml-0">
+                            <p className={`text-end text-xs font-bold ${className}`}>{label}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>

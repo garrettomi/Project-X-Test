@@ -39,22 +39,34 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
   const [hasClosedDialog, setHasClosedDialog] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
+  const [strengths, setStrengths] = useState<Array<string>>([]);
+  const [values, setValues] = useState<Array<string>>([]);
+
   useEffect(() => {
     // Scroll to top of page
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Track recommendations page visit
-    trackRecommendationsPageVisit().catch((error) => {
-      console.error('Error tracking recommendations page visit:', error);
-    });
+    if (!userId) {
+      setError(t('recommendations.errors.missing_user_id'));
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserDetails = async () => {
+      const response = await fetch(`/api/values?userId=${userId}`);
+
+      if (!response.ok) throw new Error('Error fetching user data from values');
+
+      const data = await response.json();
+
+      const extractedValues = Object.keys(data.user_values.values);
+      const extractedStrengths = Object.keys(data.user_values.strengths);
+
+      setValues(extractedValues);
+      setStrengths(extractedStrengths);
+    };
 
     const fetchRecommendations = async (refresh = false) => {
-      if (!userId) {
-        setError(t('recommendations.errors.missing_user_id'));
-        setLoading(false);
-        return;
-      }
-
       // Set loading state if not refreshing
       if (!refresh) {
         setLoading(true);
@@ -178,6 +190,20 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         setIsStreaming(false);
       }
     };
+
+    const initialPromises = [
+      // Track recommendations page visit
+      trackRecommendationsPageVisit(),
+      // Fetch strengths & values for users to reference when reviewing results
+      fetchUserDetails(),
+    ];
+
+    Promise.all(initialPromises).catch((error) => {
+      console.error(
+        'Error during initial fetch for tracking page visits and fetching user details:',
+        error
+      );
+    });
 
     if (loaded) {
       fetchRecommendations();
@@ -427,6 +453,34 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
         </AnimatedContent>
 
         <AnimatedContent direction="vertical" distance={30} delay={450}>
+          <ul className="text-start text-gray-300 mb-2">
+            <div className="my-2">
+              <span className="text-sm sm:text-base">{t('recommendations.userValues')}</span>
+            </div>
+            {values &&
+              values.map((value: string, index: number) => (
+                <li
+                  key={index}
+                  className="font-medium sm:font-bold text-xs sm:text-sm leading-relaxed sm:leading-loose list-disc list-inside"
+                >
+                  {value}
+                </li>
+              ))}
+          </ul>
+          <ul className="mb-4 text-start text-gray-300 sm:mb-8">
+            <div className="my-2">
+              <span className="text-sm sm:text-base">{t('recommendations.userStrengths')}</span>
+            </div>
+            {strengths &&
+              strengths.map((strength: string, index: number) => (
+                <li
+                  key={index}
+                  className="font-medium sm:font-bold text-xs sm:text-sm leading-relaxed sm:leading-loose list-disc list-inside"
+                >
+                  {strength}
+                </li>
+              ))}
+          </ul>
           <p className="mb-4 text-base text-center text-gray-300 sm:text-lg sm:mb-8">
             {t('recommendations.description')}
           </p>
@@ -453,6 +507,8 @@ export default function RecommendationsContent({ lng }: RecommendationsContentPr
                   key={recommendation.id || recommendation.company.id}
                   company={recommendation.company}
                   matchingPoints={recommendation.matching_points}
+                  valueMatchingRatings={recommendation.value_match_ratings}
+                  strengthMatchingRatings={recommendation.strength_match_ratings}
                   feedback={recommendation.feedback}
                   onFeedback={(feedbackType) =>
                     recommendation.id &&
