@@ -246,6 +246,7 @@
       "description": "パートナー企業情報にアクセス"
     },
     "primaryButton": "BaseMeに登録する",
+    "primaryButtonRedirectMessage": "ページを移動しています...",
     "secondaryButton": "Googleで続ける",
     "disclaimer": "利用を開始することで、利用規約とプライバシーポリシーに同意したものとみなされます。"
   },

@@ -184,7 +184,9 @@ const SignupDialog: React.FC<SignupDialogProps> = ({
             isRedirecting ? 'opacity-60 cursor-not-allowed hover:scale-100' : ''
           }`}
         >
-          {isRedirecting ? 'Redirecting...' : t('cta.primaryButton') || 'Sign up with Email'}
+          {isRedirecting
+            ? t('cta.primaryButtonRedirectMessage')
+            : t('cta.primaryButton') || 'Sign up with Email'}
         </Button>
 
         {/* <GoogleSignUpButton t={t} onClick={handleGoogleSignupClick} /> */}

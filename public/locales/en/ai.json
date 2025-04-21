@@ -246,6 +246,7 @@
       "description": "Access partner listings"
     },
     "primaryButton": "Sign up with BaseMe",
+    "primaryButtonRedirectMessage": "Redirecting...",
     "secondaryButton": "Continue with Google",
     "disclaimer": "By signing up, you agree to our Terms and Privacy Policy."
   },
