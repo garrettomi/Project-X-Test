@@ -4,6 +4,8 @@
 
 Implemented visual context to help users better understand the relationship between their questionnaire answers and the recommended results.
 
+[Main PR - feat-implement-visual-context-for-recommendations](https://github.com/garrettomi/Project-X-Test/pull/1)
+
 ## What
 
 The initial version of Project X starts with a 10-question questionnaire and provides job recommendations based on the user's values and strengths.
@@ -67,6 +69,8 @@ The ultimate goal: Help users feel seen and understood which in turn will increa
 
 Follow the documentation outlined in `README.md`
 
-### Deployment
+## Additional Fixes
 
-Coming soon -- deploying from `feat-implement-visual-context-for-recommendations`
+### 1. Implement redirection state for sign-up button
+
+[PR - fix-sign-up-button-state-on-redirect](https://github.com/garrettomi/Project-X-Test/pull/2)
