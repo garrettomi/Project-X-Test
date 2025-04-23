@@ -44,6 +44,7 @@ const SignupDialog: React.FC<SignupDialogProps> = ({
   const isMobile = useIsMobile();
   const router = useRouter();
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Check if we're in a browser environment before accessing localStorage
   useEffect(() => {
@@ -73,6 +74,7 @@ const SignupDialog: React.FC<SignupDialogProps> = ({
 
   // Handle sign up button click with tracking
   const handleSignupClick = async () => {
+    setIsRedirecting(true);
     try {
       // Track email signup click
       await trackEmailSignupClick();
@@ -177,9 +179,14 @@ const SignupDialog: React.FC<SignupDialogProps> = ({
         <Button
           size="lg"
           onClick={handleSignupClick}
-          className="w-full p-4 font-bold border border-white text-white transition-all rounded-md sm:w-auto bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105 active:scale-95"
+          disabled={isRedirecting}
+          className={`w-full p-4 font-bold border border-white text-white transition-all rounded-md sm:w-auto bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 hover:scale-105 active:scale-95 ${
+            isRedirecting ? 'opacity-60 cursor-not-allowed hover:scale-100' : ''
+          }`}
         >
-          {t('cta.primaryButton') || 'Sign up with Email'}
+          {isRedirecting
+            ? t('cta.primaryButtonRedirectMessage')
+            : t('cta.primaryButton') || 'Sign up with Email'}
         </Button>
 
         {/* <GoogleSignUpButton t={t} onClick={handleGoogleSignupClick} /> */}
